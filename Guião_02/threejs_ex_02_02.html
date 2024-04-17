@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<!--
+
+		threejs_ex_02_01.html
+
+		J. Madeira - March 2022 - Updated: April 2023
+
+		Adapted / simplified from the Learning Three.js book examples
+
+-->
+
+<head>
+
+	<title>three.js Ex.02_02 </title>
+
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<style>
+		body {
+
+			background-color: #ffffff;
+
+			/* To use the complete page */
+
+			margin: 0px;
+
+			overflow: hidden;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<!-- Div which will hold the renderer output -->
+
+	<div id="WebGL-output"> </div>
+
+	<!-- The library -->
+
+	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+	<script type="importmap">
+		{
+    		"imports": {
+     			 "three": "https://threejs.org/build/three.module.js"
+    		}
+  		}
+	</script>
+
+	<!-- Javascript code that runs the Three.js example -->
+
+	<script type="module">
+
+		import * as THREE from 'three';
+		import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+
+		// Once everything is loaded, run this function
+
+		function init() {
+
+			// The SCENE
+
+			const scene = new THREE.Scene();
+
+			// The GROUND plane
+
+			const planeGeometry = new THREE.PlaneGeometry(60, 20);
+			const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+			const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+			// Rotate and position the plane
+
+			plane.rotation.x = -0.5 * Math.PI; // TODO: What happens if you comment out this line of code?
+			plane.position.x = 15;
+			plane.position.y = 0;
+			plane.position.z = 0;
+
+			// Add to the scene
+
+			scene.add(plane);
+
+			// Add coordinate AXIS to the scene
+
+			const axes = new THREE.AxesHelper(20);
+
+			scene.add(axes);
+
+			// A CUBE
+
+			const cubeGeometry = new THREE.BoxGeometry(3, 3, 3);
+			const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+			const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+			// Position the cube and add it to the scene
+			// TODO: What happens if you comment out the next three lines of code?
+			cube.position.x = -8;
+			cube.position.y = 1.5;
+			cube.position.z = -3;
+
+			scene.add(cube);
+
+			// A SPHERE
+			const sphereGeometry = new THREE.SphereGeometry(3, 12, 12);
+			const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff});
+			const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+			// Position the sphere and add it to the scene
+			// TODO: What happens if you comment out the next three lines of code?
+			sphere.position.x = 20;
+			sphere.position.y = 3;
+			sphere.position.z = 5;
+
+			// TODO; What happens if you increase or decrease the radius of the sphere?
+
+			// add the sphere to the scene
+			scene.add(sphere);
+
+			// A CONE
+			const coneGeometry = new THREE.ConeGeometry(4, 10, 10);
+			const coneMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00});
+			const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+
+			// Position the cone and add it to the scene
+			cone.position.x = 30;
+			cone.position.y = 5;
+			cone.position.z = -3;
+
+			// add the cone to the scene
+			scene.add(cone);
+
+
+			// A CYLINDER
+			const cylinderGeometry = new THREE.CylinderGeometry(3, 3, 5, 10);
+			const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0xffff00});
+			const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+
+			// Position the cylinder and add it to the scene
+			cylinder.position.x = 0;
+			cylinder.position.y = 2.5;
+			cylinder.position.z = -3;
+
+			// add the cylinder to the scene
+			scene.add(cylinder);
+			
+
+			// A TORUS
+			const torusGeometry = new THREE.TorusGeometry(4.5, 1.5, 10, 50);
+			const torusMaterial = new THREE.MeshLambertMaterial({ color: 0xff00ff});
+			const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+
+			// Position the torus and add it to the scene
+			torus.position.x = 10;
+			torus.position.y = 6;
+			torus.position.z = -2;
+
+			// add the torus to the scene
+			scene.add(torus);
+
+			
+			// A CUTTED CONE
+			const cuttedConeGeometry = new THREE.CylinderGeometry(1, 3, 8, 20, true);
+			const cuttedConeMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff});
+			const cuttedCone = new THREE.Mesh(cuttedConeGeometry, cuttedConeMaterial);
+
+			// Position the cuttedCone and add it to the scene
+			cuttedCone.position.x = 35;
+			cuttedCone.position.y = 5;
+			cuttedCone.position.z = 5;
+
+			// add the cuttedCone to the scene
+			scene.add(cuttedCone);
+
+			// The CAMERA
+
+			// --- Where the viewer is and how he is looking at the scene
+
+			const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+			// Position the camera
+
+			camera.position.x = -30;
+			camera.position.y = 40;
+			camera.position.z = 30;
+
+			// Point the camera to the center of the scene
+
+			camera.lookAt(scene.position);
+
+			scene.add(camera)
+
+			// SPOTLIGHT --- A light source to better see the objects
+			
+			const spotLight = new THREE.SpotLight(0xffffff, 10000);
+			spotLight.position.set(-40, 60, -10);
+	
+			scene.add(spotLight);
+
+			plane.receiveShadow = true;
+			cube.receiveShadow = true;
+			sphere.receiveShadow = true;
+			cone.receiveShadow = true;
+			cylinder.receiveShadow = true;
+			torus.receiveShadow = true;
+			cuttedCone.receiveShadow = true;
+			
+			cube.castShadow = true;
+			sphere.castShadow = true;
+			cone.castShadow = true;
+			cylinder.castShadow = true;
+			torus.castShadow = true;
+			cuttedCone.castShadow = true;
+			
+			spotLight.castShadow = true;
+
+			// The RENDERER --- To display the scene on the Web page
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+			renderer.setClearColor(new THREE.Color(0xffffff));
+
+			renderer.setPixelRatio(window.devicePixelRatio);
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+			renderer.shadowMap.enabled = true;
+
+			// Add the output of the renderer to the html element
+
+			document.getElementById("WebGL-output").appendChild(renderer.domElement);
+
+		// Orbit Controls
+
+		const controls = new OrbitControls(camera, renderer.domElement);
+
+		// Animate the scene
+
+		function animate() {
+			requestAnimationFrame(animate);
+			controls.update();
+			renderer.render(scene, camera);
+		}
+
+		animate();
+		}
+
+		window.onload = init;
+
+	</script>
+
+</body>
+
+</html>

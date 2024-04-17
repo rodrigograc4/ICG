@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<!--
+
+		threejs_ex_01_02_a_cube.html
+
+		Simple example: a cube
+
+		J. Madeira - March 2021 - Updated: April 2023
+
+		Adapted / simplified from 
+
+		https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_cube.html
+
+-->
+
+<head>
+	<title>three.js example 04</title>
+
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<style>
+		body {
+			background-color: #ffffff;
+
+			/* To use the complete page */
+
+			margin: 0px;
+
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+	<script type="importmap">
+      {
+        "imports": {
+          "three": "https://threejs.org/build/three.module.js"
+        }
+      }
+    </script>
+
+	<script type="module">
+		import * as THREE from "three";
+		import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+
+		// Once everything is loaded, run this function
+
+		function init() {
+			// The SCENE
+
+			const scene = new THREE.Scene();
+
+			// The FUNCTION --- The cubes are added to the scene
+
+			function addMengerSponge(depth, size = 20, coords = [0, 0, 0]) {
+				const scaledSize = size;
+				const offset = size / 2; // Diminua o valor de offset
+
+				if (depth == 0) {
+					const geometry = new THREE.BoxGeometry(size, size, size);
+					const material = new THREE.MeshNormalMaterial();
+					const cube = new THREE.Mesh(geometry, material);
+					const edges = new THREE.EdgesGeometry(geometry);
+					cube.position.set(coords[0], coords[1], coords[2]);
+					edges.translate(coords[0], coords[1], coords[2]);
+					scene.add(
+						new THREE.LineSegments(
+							edges,
+							new THREE.LineBasicMaterial({ color: 0x000000 })
+						)
+					);
+					scene.add(cube);
+				} else {
+					for (let x = -1; x < 2; x++) {
+						for (let y = -1; y < 2; y++) {
+							for (let z = -1; z < 2; z++) {
+								if (Math.abs(x) + Math.abs(y) + Math.abs(z) > 1) {
+									addMengerSponge(depth - 1, size / 3, [
+										coords[0] + (x * size) / 3,
+										coords[1] + (y * size) / 3,
+										coords[2] + (z * size) / 3,
+									]);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			addMengerSponge(3, 1);
+
+			// The CAMERA --- A camera is added to the scene
+
+			const camera = new THREE.PerspectiveCamera(
+				70,
+				window.innerWidth / window.innerHeight,
+				1,
+				1000
+			);
+
+			// Position the camera
+			camera.position.x = 1;
+			camera.position.y = 1;
+			camera.position.z = 2;
+
+			// Point the camera to the center of the scene
+
+			camera.lookAt(scene.position);
+
+			scene.add(camera);
+
+			// The RENDERER --- To display the scene on the Web page
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+			renderer.setClearColor(new THREE.Color(0xffffff));
+
+			renderer.setPixelRatio(window.devicePixelRatio);
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+			// Add the output of the renderer
+
+			document.body.appendChild(renderer.domElement);
+
+			// Orbit Controls
+
+			const controls = new OrbitControls(camera, renderer.domElement);
+
+			// Animate the scene
+
+			function animate() {
+				requestAnimationFrame(animate);
+				controls.update();
+				renderer.render(scene, camera);
+			}
+
+			animate();
+		}
+
+		window.onload = init;
+	</script>
+</body>
+
+</html>
