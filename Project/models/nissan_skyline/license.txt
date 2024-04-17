@@ -1,0 +1,11 @@
+Model Information:
+* title:	Nissan Skyline
+* source:	https://sketchfab.com/3d-models/nissan-skyline-aeed89c97d8e4c95b115875064aaa1fd
+* author:	soujagah (https://sketchfab.com/soujagah)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Nissan Skyline" (https://sketchfab.com/3d-models/nissan-skyline-aeed89c97d8e4c95b115875064aaa1fd) by soujagah (https://sketchfab.com/soujagah) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

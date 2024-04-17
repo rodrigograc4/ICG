@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<!--
+
+		J. Madeira - April 2021; Updated - March 2024
+
+-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title> 3D scene </title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://threejs.org/build/three.module.js",
+            "three/addons/": "https://threejs.org/examples/jsm/"
+          }
+        }
+      </script>
+
+    <script type="module">
+
+        import * as THREE from "three";
+
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+        // To store the scene graph, and elements usefull to rendering the scene
+        const sceneElements = {
+            sceneGraph: null,
+            camera: null,
+            control: null,
+            renderer: null,
+            lightType: "point"
+        };
+
+        // HELPER FUNCTIONS
+
+        const helper = {
+
+            initEmptyScene: function (sceneElements) {
+
+                // ************************** //
+                // Create the 3D scene
+                // ************************** //
+                sceneElements.sceneGraph = new THREE.Scene();
+
+                // ************************** //
+                // Add camera
+                // ************************** //
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 500);
+                sceneElements.camera = camera;
+                camera.position.set(0, 5, 5);
+                camera.lookAt(0, 0, 0);
+
+                // ************************** //
+                // Illumination
+                // ************************** //
+
+                // ************************** //
+                // Add ambient light
+                // ************************** //
+                const ambientLight = new THREE.AmbientLight('rgb(255, 255, 255)', 0.2);
+                sceneElements.sceneGraph.add(ambientLight);
+
+                // ***************************** //
+                // Add point light souce (with shadows)
+                // ***************************** //
+                const light_1 = new THREE.PointLight('rgb(255, 0, 0)', 100);
+                light_1.decay = 1;
+                light_1.position.set(10, 10, 2);
+                sceneElements.sceneGraph.add(light_1);
+
+                // Setup shadow properties for the spotlight
+                light_1.castShadow = true;
+                light_1.shadow.mapSize.width = 2048;
+                light_1.shadow.mapSize.height = 2048;
+
+                // Give a name to the spot light
+                light_1.name = "light 1";
+                
+                // ***************************** //
+                // Add second point light source (with shadows)
+                // ***************************** //
+                const light_2 = new THREE.PointLight('rgb(0, 255, 0)', 100); // Cor verde
+                light_2.decay = 1;
+                light_2.position.set(-7.5, 7.5, 2); // Posição desejada
+                sceneElements.sceneGraph.add(light_2);
+
+                // Setup shadow properties for the second spotlight
+                light_2.castShadow = true;
+                light_2.shadow.mapSize.width = 2048;
+                light_2.shadow.mapSize.height = 2048;
+
+                // Give a name to the second spot light
+                light_2.name = "light 2";
+
+                // ************************** //
+                // Add third point light source (with shadows)
+                // ************************** //
+                const light_3 = new THREE.PointLight('rgb(0, 0, 255)', 100); // Cor azul
+                light_3.decay = 1;
+                light_3.position.set(0, 3, 10); // Posição desejada
+                sceneElements.sceneGraph.add(light_3);
+
+                // Setup shadow properties for the third spotlight
+                light_3.castShadow = true;
+                light_3.shadow.mapSize.width = 2048;
+                light_3.shadow.mapSize.height = 2048;
+
+                // Give a name to the third spot light
+                light_3.name = "light 3";
+
+                // ************************** //
+                // Add fourth point light source (with shadows)
+                // ************************** //
+                const light_4 = new THREE.PointLight('rgb(255, 255, 255)', 100); // Cor branca
+                light_4.decay = 1;
+                light_4.position.set(0, -10, 0); // Posição desejada
+                sceneElements.sceneGraph.add(light_4);
+
+                // Setup shadow properties for the fourth spotlight
+                light_4.castShadow = true;
+                light_4.shadow.mapSize.width = 2048;
+                light_4.shadow.mapSize.height = 2048;
+
+                // Give a name to the fourth spot light
+                light_4.name = "light 4";
+
+                // *********************************** //
+                // Create renderer (with shadow map)
+                // *********************************** //
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                sceneElements.renderer = renderer;
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setClearColor('rgb(255, 255, 150)', 1.0);
+                renderer.setSize(width, height);
+
+                // Setup shadowMap property
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+                // **************************************** //
+                // Add the rendered image in the HTML DOM
+                // **************************************** //
+                const htmlElement = document.querySelector("#Tag3DScene");
+                htmlElement.appendChild(renderer.domElement);
+
+                // ************************** //
+                // NEW --- Control for the camera
+                // ************************** //
+                sceneElements.control = new OrbitControls(camera, renderer.domElement);
+                sceneElements.control.screenSpacePanning = true;
+
+            },
+
+            render: function (sceneElements) {
+                sceneElements.renderer.render(sceneElements.sceneGraph, sceneElements.camera);
+            },
+        };
+
+        // FUCNTIONS FOR BUILDING THE SCENE
+
+        const scene = {
+
+            // Create and insert in the scene graph the models of the 3D scene
+
+            load3DObjects: function (sceneGraph) {
+
+
+                // ************************** //
+                // Create a sphere
+                // ************************** //
+                // Sphere center is at (0,0,0)
+                const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                const sphereMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(200,200,200)' });
+                const sphereObject = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphereObject.position.set(0, 0, 0);
+                sphereObject.name = "sphere_1";
+                sceneGraph.add(sphereObject);
+
+                //Add shadow to the sphere
+                sphereObject.castShadow = true;
+                sphereObject.receiveShadow = true;
+
+
+                // ************************** //
+                // Create a second sphere
+                // ************************** //
+                // Sphere center is at (-2,0,0)
+                const sphereGeometry_2 = new THREE.SphereGeometry(0.5, 32, 32);
+                const sphereMaterial_2 = new THREE.MeshPhongMaterial({ color: 'rgb(200,200,200)' });
+                const sphereObject_2 = new THREE.Mesh(sphereGeometry_2, sphereMaterial_2);
+                sphereObject_2.position.set(-2, 0, 0);
+                sphereObject_2.name = "sphere_2";
+                sceneGraph.add(sphereObject_2);
+
+                //Add shadow to the sphere
+                sphereObject_2.castShadow = true;
+                sphereObject_2.receiveShadow = true;
+
+
+                // ************************** //
+                // Create a third sphere
+                // ************************** //
+                // Sphere center is at (2),0,0)
+                const sphereGeometry_3 = new THREE.SphereGeometry(0.5, 32, 32);
+                const sphereMaterial_3 = new THREE.MeshPhongMaterial({ color: 'rgb(200,200,200)' });
+                const sphereObject_3 = new THREE.Mesh(sphereGeometry_3, sphereMaterial_3);
+                sphereObject_3.position.set(2, 0, 0);
+                sphereObject_3.name = "sphere_3";
+                sceneGraph.add(sphereObject_3);
+
+                //Add shadow to the sphere
+                sphereObject_3.castShadow = true;
+                sphereObject_3.receiveShadow = true;
+            }
+        };
+
+        // ANIMATION
+
+        // Displacement values
+        var delta = 0.1;
+
+        //To keep track of the keyboard - WASD
+        var keyD = false, keyA = false, keyS = false, keyW = false;
+
+        //To keep track of the keyboard - OL
+        var keyO = false, keyL = false;
+
+        function computeFrame(time) {
+
+            // Can extract an object from the scene Graph from its name
+            const light_1 = sceneElements.sceneGraph.getObjectByName("light 1");
+
+            // Rotate counter-clockwise in the y-axis
+            light_1.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.1);
+
+            // Can extract an object from the scene Graph from its name
+            const light_2 = sceneElements.sceneGraph.getObjectByName("light 2");
+
+            // Rotate clockwise in the y-axis
+            light_2.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), -0.05);
+
+            // Choose the light type
+            const light = sceneElements.lightType;
+
+            if (keyA) {
+                sceneElements.lightType = "point";
+            }
+            if (keyS) {
+                sceneElements.lightType = "directional";
+            }
+            if (keyD) {
+                sceneElements.lightType = "spotlight";
+            }
+
+            sceneElements.sceneGraph.traverse((node) => {
+                if (node.isLight) {
+                    node.visible = false;
+                }
+            });
+
+            // Show the selected light type
+            switch (sceneElements.lightType) {
+                case 'point':
+                    sceneElements.sceneGraph.getObjectByName('light 1').visible = true;
+                    sceneElements.sceneGraph.getObjectByName('light 2').visible = true;
+                    break;
+                case 'directional':
+                    sceneElements.sceneGraph.getObjectByName('light 1').visible = true;
+                    sceneElements.sceneGraph.getObjectByName('light 2').visible = true;
+                    break;
+                case 'spotlight':
+                    sceneElements.sceneGraph.getObjectByName('light 1').visible = true;
+                    sceneElements.sceneGraph.getObjectByName('light 2').visible = true;
+                    break;
+            }
+
+            // Activate the shadows
+            if (keyO) {
+                sceneElements.sceneGraph.getObjectByName('light 1').castShadow = true;
+                sceneElements.sceneGraph.getObjectByName('light 2').castShadow = true;
+            }
+            if (keyL) {
+                sceneElements.sceneGraph.getObjectByName('light 1').castShadow = false;
+                sceneElements.sceneGraph.getObjectByName('light 2').castShadow = false;
+            }
+
+
+            // Rendering
+            helper.render(sceneElements);
+
+            // Animation
+            //Call for the next frame
+            requestAnimationFrame(computeFrame);
+        }
+
+        // Call functions:
+        //  1. Initialize the empty scene
+        //  2. Add elements within the scene
+        //  3. Animate
+
+        function init() {
+            helper.initEmptyScene(sceneElements);
+            scene.load3DObjects(sceneElements.sceneGraph);
+            requestAnimationFrame(computeFrame);
+        }
+
+        // HANDLING EVENTS
+
+        // Event Listeners
+
+        window.addEventListener('resize', resizeWindow);
+
+        document.addEventListener('keydown', onDocumentKeyDown, false);
+        document.addEventListener('keyup', onDocumentKeyUp, false);
+
+        // Update render image size and camera aspect when the window is resized
+        function resizeWindow(eventParam) {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            sceneElements.camera.aspect = width / height;
+            sceneElements.camera.updateProjectionMatrix();
+
+            sceneElements.renderer.setSize(width, height);
+
+            // Comment when doing animation
+            // computeFrame(sceneElements);
+        }
+
+        function onDocumentKeyDown(event) {
+            switch (event.keyCode) {
+                case 68: //d
+                    keyD = true;
+                    break;
+                case 83: //s
+                    keyS = true;
+                    break;
+                case 65: //a
+                    keyA = true;
+                    break;
+                case 87: //w
+                    keyW = true;
+                    break;
+                case 79: //o
+                    keyO = true;
+                    break;
+                case 76: //l
+                    keyL = true;
+                    break;
+            }
+        }
+
+        function onDocumentKeyUp(event) {
+            switch (event.keyCode) {
+                case 68: //d
+                    keyD = false;
+                    break;
+                case 83: //s
+                    keyS = false;
+                    break;
+                case 65: //a
+                    keyA = false;
+                    break;
+                case 87: //w
+                    keyW = false;
+                    break;
+                case 79: //o
+                    keyO = false;
+                    break;
+                case 76: //l
+                    keyL = false;
+                    break;
+            }
+        }
+
+
+        // STARTING
+
+        init();
+
+    </script>
+
+</head>
+
+<body>
+    <div id="Tag3DScene"> </div>
+</body>
+
+</html>

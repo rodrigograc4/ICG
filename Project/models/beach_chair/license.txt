@@ -1,0 +1,11 @@
+Model Information:
+* title:	Beach chair
+* source:	https://sketchfab.com/3d-models/beach-chair-b1e7c2810f8340a982d138d0349111b5
+* author:	Jacob.Elhatmi (https://sketchfab.com/Jacob.Elhatmi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Beach chair" (https://sketchfab.com/3d-models/beach-chair-b1e7c2810f8340a982d138d0349111b5) by Jacob.Elhatmi (https://sketchfab.com/Jacob.Elhatmi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
