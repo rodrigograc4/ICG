@@ -1,2 +1,2 @@
 # ICG
-Practical Classes and Project
+Practical Classes
